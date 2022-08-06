@@ -1,0 +1,19 @@
+#title {
+    text-align: center; 
+}
+
+main div {
+    display: flex;
+    justify-content:center;
+}
+
+main h3 {
+    padding: 0px;
+    margin-right: 0px;
+    text-align: center;
+    width: 500px;
+    border: 10px solid cyan;
+    border-radius: 25px;
+    color: lightgray;
+    font-family: sans-serif;
+}
