@@ -1,0 +1,15 @@
+sequencing of link shortener project:
+
+1. person connects to the website. When they connect program waits for them to enter the link into the box.
+2. when text is entereed, program takes the link as a string, and creates a shortened link.
+3. program stores regular link and shortened link in mongodb database.
+4. shortened link is given back to the user.
+5. Whenever any user uses the shortened link, it takes them to the website, which redirects them.
+
+logical breakdown:
+user is granted connection to website. Python Program waits for text to be entered. 
+When text is entered, program creates new variable for shortened link.
+Program connects to database using connection key
+Program posts new data into the collection with JSON.
+Program returns shortened link to user.
+

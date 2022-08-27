@@ -3,10 +3,39 @@
     <head>
         <link rel="stylesheet" href="styles.css">
         <h1 id="title">Link Shortener</h1>
-    </head>
-    <main>
+    <body>
         <div>
-        <h3>Shorten your link here</h3>
+            <form>
+                <input id="textbox" name="urldata" type="text" placeholder="Shorten your link here">
+            </form>
         </div>
-    </main>
+    <script>
+            let form = document.querySelector("form");
+
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            let userInput = {};
+            let elements = this.elements;
+
+
+            for(let i=0; i<elements.length; i++) {
+                if(elements[i].type !== "submit") {
+                    userInput[elements[i].name] = elements[i].value; 
+                }
+            } 
+            let xhr = new XMLHttpRequest();
+
+
+            xhr.open('POST', 'app.js');
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            
+            userInputString = JSON.stringify(userInput);
+            console.log(userInputString);
+
+            xhr.send(userInputString);
+        });
+    </script>
+    </body>
 </html>
