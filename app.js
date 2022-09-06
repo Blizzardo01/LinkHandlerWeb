@@ -9,17 +9,22 @@ const port = 3000;
 
 const server = http.createServer((req, res) => {
     let body = [];
-
+    let exclude = [ "styles.css", "favicon.ico" ];
+    let urlRequest = req.url.replace("/","");
+    
+    if (urlRequest !== null && ExistInSavedDb(urlRequest)) {
+        console.log("Server Request: " + urlRequest);
+        RedirectToNewPage(urlRequest);
+    }
 
     req.on('error', (err) => {
         console.error(err);
     })
     .on('data', (dataRecieved) => {
         body.push(dataRecieved);
-        body[0] = body[0].toString();
-        spiffString(body[0]);
+        body.push(converter("http://127.0.0.1:3000/"))
         console.log(`new data recieved!: ${body}`);
-        var doc = CreateObj(body[0], "test");
+        var doc = CreateObj(body[0].toString(), body[1]);
         console.log("inserted: " + doc);
 
         async function addDoc() {
@@ -42,16 +47,10 @@ const server = http.createServer((req, res) => {
         return obj;
     }
 
-    function spiffString(inputString) {
-        if (typeof inputString == "string") {
-            inputString = inputString.slice(0,11);
-            console.log("success");
-            return inputString;
-        }
-        else {
-            console.log(`Error: you gave type ${typeof inputString}, required type String`);
-        }
-        
+    function converter(url) {
+        redirect = url + guid()
+        return redirect
+
     }
 
     function guid() {
@@ -60,8 +59,18 @@ const server = http.createServer((req, res) => {
                 .toString(16)
                 .substring(1);
         }
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
+        return s4() + s4();
+    }
+
+    function RedirectToNewPage(inputRequest) {
+        // todo: Perform the following
+        // 1. Find MongoDB record
+        // 2. Redirect to New URL Path
+    }
+
+    function ExistInSavedDb(inputRequest) {
+        // todo : perform the following
+        // 1. return true / false if a record exists
     }
     
     fs.readFile('main.html', function(error, data) {
@@ -78,10 +87,11 @@ const server = http.createServer((req, res) => {
 
 });
 
+
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
     
-  });
+});
 
 //converts url
   /*  const grabbedURL = document.getElementsByName("normal_link").values;

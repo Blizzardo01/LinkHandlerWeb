@@ -1,20 +1,47 @@
 {
   
   "name": "linkhandlerweb",
+  
   "version": "1.0.0",
+  
   "description": "server for website to grab info",
+  
   "main": "app.js",
+  
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  
+    
+  "test": "echo \"Error: no test specified\" && exit 1"
+  
   },
+  
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Blizzardo01/LinkHandlerWeb.git"
+  
+    
+  "type": "git",
+  
+    
+  "url": "git+https://github.com/Blizzardo01/LinkHandlerWeb.git"
+  
   },
+  
   "author": "Blizzardo01",
+  
   "license": "ISC",
+  
   "bugs": {
-    "url": "https://github.com/Blizzardo01/LinkHandlerWeb/issues"
+  
+    
+  "url": "https://github.com/Blizzardo01/LinkHandlerWeb/issues"
+  
   },
-  "homepage": "https://github.com/Blizzardo01/LinkHandlerWeb#readme"
+  
+  "homepage": "https://github.com/Blizzardo01/LinkHandlerWeb#readme",
+  
+  "dependencies": {
+  
+    
+  "mongodb": "^4.9.0"
+  
+  }
 }
