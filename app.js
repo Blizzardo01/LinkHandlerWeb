@@ -11,10 +11,17 @@ const server = http.createServer((req, res) => {
     let body = [];
     let exclude = [ "styles.css", "favicon.ico" ];
     let urlRequest = req.url.replace("/","");
-    
-    if (urlRequest !== null && ExistInSavedDb(urlRequest)) {
+    //let urlResponse = 
+    //todo: cleanup bad requests
+
+    // clean-up
+    for (var i = 0; i < exclude.length; i++) {
+        urlRequest = urlRequest.replace(exclude[i], "");
+    }
+
+    if ((urlRequest !== null && urlRequest.length !== 0) && ExistInSavedDb(urlRequest)) {
         console.log("Server Request: " + urlRequest);
-        RedirectToNewPage(urlRequest);
+        RedirectToNewPage(urlRequest, res);
     }
 
     req.on('error', (err) => {
@@ -22,14 +29,15 @@ const server = http.createServer((req, res) => {
     })
     .on('data', (dataRecieved) => {
         body.push(dataRecieved);
-        body.push(converter("http://127.0.0.1:3000/"))
+        URLredirect = guid();
+        body.push("http://127.0.0.1:3000/" + URLredirect)
+        body.push(URLredirect)
         console.log(`new data recieved!: ${body}`);
-        var doc = CreateObj(body[0].toString(), body[1]);
+        var doc = CreateObj(body[0].toString(), body[1], body[2]);
         console.log("inserted: " + doc);
 
         async function addDoc() {
             await client.connect();
-
             client.db("LinkHandler").collection("URLS").insertOne(doc);
             console.log("added document");
         }
@@ -39,18 +47,33 @@ const server = http.createServer((req, res) => {
 
     });
     
-    function CreateObj(regularURL, modifiedURL){
+    function CreateObj(regularURL, modifiedURL, redirectURL){
         var obj = { id: guid,
         url: regularURL,
-        modurl: modifiedURL}
+        modurl: modifiedURL,
+        specificdirect: redirectURL}
 
         return obj;
     }
 
-    function converter(url) {
-        redirect = url + guid()
-        return redirect
+    async function ExistInSavedDb(inputRequest) {
+        var search = await QueryDatabase(inputRequest);
 
+        if (search.specificdirect == inputRequest){
+            console.log("file exists");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    async function QueryDatabase(inputRequest) {
+        var query = { specificdirect: inputRequest };
+        await client.connect();
+        var search = await client.db("LinkHandler").collection("URLS").findOne(query);
+        client.close();
+
+        return search;
     }
 
     function guid() {
@@ -62,15 +85,13 @@ const server = http.createServer((req, res) => {
         return s4() + s4();
     }
 
-    function RedirectToNewPage(inputRequest) {
+    async function RedirectToNewPage(inputRequest, response) {
         // todo: Perform the following
-        // 1. Find MongoDB record
-        // 2. Redirect to New URL Path
-    }
+        var redirect = await QueryDatabase(inputRequest);
 
-    function ExistInSavedDb(inputRequest) {
-        // todo : perform the following
-        // 1. return true / false if a record exists
+        response.writeHead(301, {location: redirect.url
+        });
+        response.end();
     }
     
     fs.readFile('main.html', function(error, data) {
@@ -83,22 +104,9 @@ const server = http.createServer((req, res) => {
         }
         res.end();
     })
-
-
 });
-
 
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
     
 });
-
-//converts url
-  /*  const grabbedURL = document.getElementsByName("normal_link").values;
-    console.log(`URL Grabbed: ${grabbedURL}`);
-}
-
-    
-
-
-main().catch(console.dir);*/
