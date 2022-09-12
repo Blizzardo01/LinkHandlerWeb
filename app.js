@@ -1,7 +1,6 @@
 const http = require('http');
 const fs = require('fs');
 const { MongoClient, Collection } = require("mongodb");
-const CONNECTION_STRING = "mongodb+srv://BMIUser:Xu8E+$*)kT%5B)fH!T@cluster0.um0g5.mongodb.net/test";
 const client = new MongoClient(CONNECTION_STRING);
 const hostname = '127.0.0.1';
 const port = 3000;
